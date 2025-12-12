@@ -29,14 +29,14 @@ LEAR/
 │   ├── LEAR.py               # LEAR backbone implementation
 │   └── ...
 ├── datasets/                 # Dataset loaders
-|   ├── init.py       # Modify domain sequence                
+|   ├── init.py               # Modify domain sequence                
 │   └── ...
 ├── models/                   # CL Method implementations
 │   └── LEAR.py               # LEAR method implementation
 ├── utils/                    # Helper tools
 |   ├── train_domain.py       # Training scripts                
 │   └── ...
-├── main_domain.py                   # Main entry
+├── main_domain.py            # Main entry
 ├── LEAR.sh
 └── README.md
 ```
