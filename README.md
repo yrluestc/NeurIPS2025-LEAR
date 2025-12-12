@@ -52,4 +52,3 @@ If you find this repository helpful, please cite our paper:
 ## 🙏 Acknowledgement
 
 Thanks for the awesome continual learning framework **[Mammoth](https://github.com/aimagelab/mammoth)**.
-We sincerely thank the authors for open-sourcing their work.
