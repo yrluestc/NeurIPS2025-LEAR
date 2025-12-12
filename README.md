@@ -3,3 +3,53 @@
 
 The official implementation for "Learning Expandable and Adaptable Representations for Continual Learning" (NeurIPS2025) 
 
+------
+
+## ▶️ Usage
+
+### **1. Run the example training script**
+
+```bash
+bash LEAR.sh
+```
+
+### Project structure overview
+
+```bash
+LEAR/
+├── backbone/                 # Pre-trained backbone models
+│   ├── LEAR.py               # LEAR backbone implementation
+│   └── ...
+├── datasets/                 # Dataset loaders
+|   ├── init.py       # Modify domain sequence                
+│   └── ...
+├── models/                   # CL Method implementations
+│   └── LEAR.py               # LEAR method implementation
+├── utils/                    # Helper tools
+|   ├── train_domain.py       # Training scripts                
+│   └── ...
+├── main_domain.py                   # Main entry
+├── LEAR.sh
+└── README.md
+```
+
+------
+
+## 📝 Citation
+
+If you find this repository helpful, please cite our paper:
+
+```
+@inproceedings{yulearning,
+  title={Learning Expandable and Adaptable Representations for Continual Learning},
+  author={Yu, Ruilong and Liu, Mingyan and Ye, Fei and Bors, Adrian G and Hu, Rongyao and others},
+  booktitle={The Thirty-ninth Annual Conference on Neural Information Processing Systems}
+}
+```
+
+------
+
+## 🙏 Acknowledgement
+
+Thanks for the awesome continual learning framework **[Mammoth](https://github.com/aimagelab/mammoth)**.
+We sincerely thank the authors for open-sourcing their work.
