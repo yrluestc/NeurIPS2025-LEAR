@@ -45,7 +45,7 @@ LEAR/
 
 ## 📝 Citation
 
-If you find this repository helpful, please cite our paper:
+If you find this repository helpful, please click the ⭐Star and cite our paper:
 
 ```
 @inproceedings{yulearning,
