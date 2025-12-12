@@ -7,7 +7,15 @@ The official implementation for "Learning Expandable and Adaptable Representatio
 
 ## ▶️ Usage
 
-### **1. Run the example training script**
+### **1. Create env and install requirements**
+
+```bash
+conda create -n LEAR python=3.10
+conda activate LEAR
+pip install -r requirements.txt
+```
+
+### **2. Run the example training script**
 
 ```bash
 bash LEAR.sh
