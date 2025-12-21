@@ -13,7 +13,6 @@ import copy
 from backbone import MammothBackbone, register_backbone
 
 
-
 class LEAR(MammothBackbone):
     """
     ResNet network architecture. Designed for complex datasets.
@@ -26,7 +25,7 @@ class LEAR(MammothBackbone):
 
         super(LEAR, self).__init__()
 
-        self.device = 'cuda:0'
+        self.device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
         self.num_classes = num_classes
 
@@ -34,7 +33,7 @@ class LEAR(MammothBackbone):
         self.fc_dim = 500
 
         self.fcArr = [nn.Linear(self.model_dim, self.fc_dim, device=self.device)]
-        self.classifierArr = [nn.Linear(self.model_dim + self.fc_dim, self.num_classes, device = self.device)]
+        self.classifierArr = [nn.Linear(self.model_dim + self.fc_dim, self.num_classes, device=self.device)]
         self.distributions = []
 
         model_name_vit = 'vit_base_patch16_224'
@@ -42,7 +41,7 @@ class LEAR(MammothBackbone):
         self.c_expert = 0
 
         self.vitProcess = transforms.Compose(
-        [transforms.Resize(224)])
+            [transforms.Resize(224)])
 
         self.local_vitmodel = timm.create_model(
             model_name_vit,
@@ -80,15 +79,12 @@ class LEAR(MammothBackbone):
             for param in block.parameters():
                 param.requires_grad = False
 
-    
-
-
     def CreateNewExper(self, idx, num_classes):
         new_fc_dim = self.fc_dim
         new_fc = nn.Linear(self.model_dim, new_fc_dim, device=self.device)
         new_fc.load_state_dict(self.fcArr[idx].state_dict())
         # self.classifier.load_state_dict(self.classifierArr[idx].state_dict())
-        print('load expert ' + str(idx+1) + ' parameters')
+        print('load expert ' + str(idx + 1) + ' parameters')
         self.fcArr.append(new_fc)
         self.classifier = nn.Linear(self.model_dim + new_fc_dim, num_classes, device=self.device)
         self.classifierArr.append(self.classifier)
@@ -103,14 +99,16 @@ class LEAR(MammothBackbone):
 
     def forward_expert(self, global_features, local_features):
         fcfeatures = self.fcArr[self.c_expert](local_features)
-        final_features = torch.cat((global_features,fcfeatures), dim=1)
+        final_features = torch.cat((global_features, fcfeatures), dim=1)
         out = self.classifierArr[self.c_expert](final_features)
         return out
 
     def forward(self, x: torch.Tensor, return_features=False) -> torch.Tensor:
         if return_features:
-            Freezed_global_features, Freezed_local_features, global_features, local_features = self.forward_fusion(x, return_features=True)
-            return self.forward_expert(global_features, local_features), Freezed_global_features, Freezed_local_features, global_features, local_features
+            Freezed_global_features, Freezed_local_features, global_features, local_features = self.forward_fusion(x,
+                                                                                                                   return_features=True)
+            return self.forward_expert(global_features,
+                                       local_features), Freezed_global_features, Freezed_local_features, global_features, local_features
         else:
             global_features, local_features = self.forward_fusion(x)
             return self.forward_expert(global_features, local_features), global_features, local_features
@@ -135,7 +133,6 @@ class LEAR(MammothBackbone):
 
         for block in self.global_vitmodel.blocks[:-3]:
             global_features = block(global_features)
-
 
         if return_features:
             Freezed_global_features = self.Freezed_global_blocks(global_features)
@@ -162,13 +159,14 @@ class LEAR(MammothBackbone):
         else:
             return global_features, local_features
 
-    def myprediction(self,x,index):
+    def myprediction(self, x, index):
         with torch.no_grad():
             global_features, local_features = self.forward_fusion(x)
             fcfeatures = self.fcArr[index](local_features)
             final_features = torch.cat((global_features, fcfeatures), dim=1)
             out = self.classifierArr[index](final_features)
             return out
+
 
 @register_backbone("lear")
 def LEAR_backbone(num_classes):
