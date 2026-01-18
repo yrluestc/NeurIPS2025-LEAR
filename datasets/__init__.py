@@ -202,15 +202,14 @@ def get_all_datasets(args: Namespace) -> ContinualDataset:
     # For single dataset usage, only load the specified dataset
     dataset_list = []
 
-    # Only use the dataset specified by the user
-    name = args.dataset
-    print(f"Loading dataset: {name}")
-
-    dataset_class, dataset_args = get_dataset_class(args, return_args=True)
-    missing_args = [arg for arg in dataset_args.keys() if arg not in vars(args)]
-    assert len(missing_args) == 0, "Missing arguments for the dataset: " + ', '.join(missing_args)
-    parsed_args = {arg: getattr(args, arg) for arg in dataset_args.keys()}
-    dataset_list.append(dataset_class(args, **parsed_args))
+    for name in dataset_names:
+        print(name)
+        args.dataset = name
+        dataset_class, dataset_args = get_dataset_class(args, return_args=True)
+        missing_args = [arg for arg in dataset_args.keys() if arg not in vars(args)]
+        assert len(missing_args) == 0, "Missing arguments for the dataset: " + ', '.join(missing_args)
+        parsed_args = {arg: getattr(args, arg) for arg in dataset_args.keys()}
+        dataset_list.append(dataset_class(args, **parsed_args))
 
     return dataset_list
 
